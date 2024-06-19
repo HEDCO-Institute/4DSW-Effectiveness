@@ -63,9 +63,27 @@ sum(duplicated(td_study$refid))
 
 # Descriptive Analyses
 
-## Eligibility Assessment
+## Eligibility Assessment for Meta-Analysis
+
+```{r eligibility}
+# Number of studies ineligible due to no comparison
+num_inelig_nocomp <- sum(td_MAeligibility$effectiveness_eligibility == "Ineligible due to no comparison group")
+
+# Number of studies ineligible due to no student outcomes
+num_inelig_outcome <- sum(td_MAeligibility$effectiveness_eligibility == "Ineligible on outcomes (no student outcomes)")
+
+# Number of studies ineligible due critical ROB
+num_inelig_rob <- sum(td_MAeligibility$effectiveness_eligibility == "Move to ROBINS-I eligibility assessment" & td_MAeligibility$robins_overall_judgment == "Critical")
+
+num_elig <- sum(td_MAeligibility$robins_overall_judgment != "Critical" & !is.na(td_MAeligibility$robins_overall_judgment))
+
+```
+
+Out of the 111 studies that were included in the scoping review, only `r nrow(td_MAeligibility)` included information related to the effectiveness of implementing a four-day school week. From those `r nrow(td_MAeligibility)` studies, we excluded `r num_inelig_nocomp` studies that did not include a comparison group, `r num_inelig_outcome` studies that did not report on student outcomes, and `r num_inelig_rob` studies that we determined had critical risk of bias. Overall, we included `r num_elig` studies in this meta-analysis. 
 
 ## Study Characteristics
+
+
 
 ## Study Design
 
