@@ -1,0 +1,83 @@
+---
+title: "Cleaning & Analysis Script"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Install and load pacman package
+if (!require("pacman")) install.packages("pacman")
+
+# Install and load required packages
+p_load(rio, here, tidyverse, janitor) 
+```
+
+```{r import}
+# Import data from saved DistillerSR reports
+# Import preliminary data to build script (TODO: replace with final data when ready)
+# Import the Effectiveness MA Eligibility data (file is already reconciled to one row per refid)
+raw_MAeligibility_df <- import(here("data", "4dsw_effectiveness_eligibility_preliminary.xlsx"))
+
+# Import Effectiveness Study Level data (file has one row per user, refid combo)
+raw_study_df <- import(here("data", "4dsw_effectiveness_study_level_preliminary.xlsx"))
+
+```
+
+```{r functions}
+#Write functions for formatting inline code
+format_thousands <- function(x) {
+  big_num <- format(x, big.mark = ",")
+  return(big_num)
+}
+
+format_percent <- function(x, digits, force_decimal = FALSE) {
+  if (force_decimal) {
+    percentage <- paste0(format(round(x, digits), nsmall = digits), "%")
+  } else {
+    percentage <- paste0(round(x, digits), "%")
+  }
+  return(percentage)
+}
+```
+
+# Cleaning
+
+```{r clean}
+# Transform MA eligibility data
+td_MAeligibility <- raw_MAeligibility_df %>% 
+  janitor::clean_names() %>% 
+  select(-level)
+
+# Transform study level data
+td_study <- raw_study_df %>% 
+  janitor::clean_names() %>% 
+  distinct(across(-user), .keep_all = TRUE)
+
+# Check there are no duplicate refIDs
+sum(duplicated(td_study$refid))
+
+```
+
+
+# Descriptive Analyses
+
+## Eligibility Assessment
+
+## Study Characteristics
+
+## Study Design
+
+## Participants
+
+## Settings
+
+## Interventions
+
+## Comparison
+
+## OTHER RELEVANT FOR 4DSW?
+
+
+# Meta-Analysis 
